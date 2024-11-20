@@ -37,10 +37,12 @@
     function addParticipant() {
       const nameInput = document.getElementById('nameInput');
       const name = nameInput.value.trim();
-      if (name) {
+      if (name && !participants.includes(name)) {
         participants.push(name);
         renderParticipants();
         nameInput.value = '';
+      } else if (participants.includes(name)) {
+        alert("Esse participante já foi adicionado!");
       }
     }
 
@@ -55,16 +57,37 @@
       });
     }
 
+    function createValidDraw() {
+      let shuffled;
+      let isValid;
+
+      do {
+        shuffled = [...participants].sort(() => Math.random() - 0.5);
+        isValid = true;
+
+        // Verifica se alguém tirou quem o tirou
+        for (let i = 0; i < participants.length; i++) {
+          const giver = shuffled[i];
+          const receiver = shuffled[(i + 1) % shuffled.length];
+          if (participants.indexOf(receiver) === i) {
+            isValid = false;
+            break;
+          }
+        }
+      } while (!isValid);
+
+      return shuffled;
+    }
+
     function createDraw() {
       if (participants.length < 2) {
         alert('Adicione pelo menos 2 participantes!');
         return;
       }
 
-      // Shuffle participants and create assignments
-      const shuffled = [...participants].sort(() => Math.random() - 0.5);
-      const assignments = shuffled.map((_, i) => ({
-        giver: shuffled[i],
+      const shuffled = createValidDraw();
+      const assignments = shuffled.map((giver, i) => ({
+        giver,
         receiver: shuffled[(i + 1) % shuffled.length],
       }));
 
