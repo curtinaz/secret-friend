@@ -209,7 +209,6 @@
             const { giver, receiver, calledBy, passwords } = JSON.parse(atob(encodedData));
 
             if (passwords.includes(passwordInput)) {
-                console.log(JSON.parse(atob(encodedData)))
                 document.getElementById('resultMessage').innerHTML = `Quem tirou <strong>${giver}</strong> foi <strong>${calledBy}</strong>!`;
             } else {
                 document.getElementById('resultMessage').innerHTML = `<span class="text-danger">Senha incorreta!</span>`;
